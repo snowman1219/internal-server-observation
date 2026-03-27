@@ -1,0 +1,124 @@
+[project]
+name = "server"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "asyncssh",
+    "pydantic-settings",
+    "pyyaml",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "httpx",
+]
+lint = [
+    "pyright>=1.1.408",
+    "ruff>=0.15.1",
+]
+
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]
+
+
+[tool.pyright]
+exclude = [
+    "**/.venv",
+    "tmp/",
+    "**/__pycache__",
+    "**/*.pyc",
+]
+typeCheckingMode = "basic"
+pythonVersion = "3.14"
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+target-version = "py314"
+exclude = [
+    ".venv",
+    "tmp/",
+]
+
+
+[tool.ruff.lint]
+select = ["ALL"]
+extend-per-file-ignores = { "**/__init__.py" = [
+    "I",
+    "F403",
+], "**/test_*.py" = [
+    "I",
+    "F403",
+    "PLR2004",
+    "SLF001",
+] }
+ignore = [
+    "TD003",
+    "FIX002",
+    "ARG002",
+    "A005",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D107",
+    "D205",
+    "D400",
+    "D415",
+    "D203",
+    "D213",
+    "PLR0913",
+    "W191",
+    "E111",
+    "E114",
+    "E117",
+    "EM101",
+    "EM102",
+    "D206",
+    "D300",
+    "G004",
+    "Q000",
+    "Q001",
+    "Q002",
+    "Q003",
+    "COM812",
+    "COM819",
+    "ISC001",
+    "ISC002",
+    "TC001",
+    "TC002",
+    "S101",
+    "ANN201",
+    "INP001",
+    "ERA001",
+    "TRY003",
+    "DTZ005",
+    "PT011",
+    "ARG003",
+    "FBT",
+    "RUF",
+]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel", "pydantic_settings.BaseSettings"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
