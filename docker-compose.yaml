@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ${SSH_KEY_PATH:-~/.ssh}:/root/.ssh:ro
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+      - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-30}
+      - SSH_TIMEOUT_SECONDS=${SSH_TIMEOUT_SECONDS:-5}
+      - SSH_KEY_PATH=/root/.ssh/id_rsa
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_BASE_URL: ${VITE_BASE_URL:-http://backend:8000}
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

@@ -1,0 +1,27 @@
+# ポーリング間隔（秒）
+poll_interval_seconds: 30
+
+# SSH接続タイムアウト（秒）
+ssh_timeout_seconds: 5
+
+# デフォルトSSH秘密鍵パス
+ssh_key_path: "~/.ssh/id_rsa"
+
+# 監視対象サーバー一覧
+servers:
+  # 監視サーバー自身
+  - name: monitor-server
+    host: localhost
+    ssh_user: monitor
+
+  # GPUサーバー
+  - name: gpu-server-1
+    host: 192.168.1.10
+    ssh_user: monitor
+    ssh_port: 22                      # 省略可（デフォルト: 22）
+    ssh_key_path: ~/.ssh/gpu_key      # 省略可（グローバル設定を使用）
+
+  # 開発サーバー
+  - name: dev-server-2
+    host: 192.168.1.12
+    ssh_user: monitor
