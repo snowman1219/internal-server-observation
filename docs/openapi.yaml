@@ -1,0 +1,503 @@
+components:
+  schemas:
+    CpuMemoryOverview:
+      properties:
+        cpu_count:
+          title: Cpu Count
+          type: integer
+        load_average_15m:
+          title: Load Average 15M
+          type: number
+        load_average_1m:
+          title: Load Average 1M
+          type: number
+        load_average_5m:
+          title: Load Average 5M
+          type: number
+        memory_available:
+          title: Memory Available
+          type: string
+        memory_free:
+          title: Memory Free
+          type: string
+        memory_total:
+          title: Memory Total
+          type: string
+        memory_used:
+          title: Memory Used
+          type: string
+        memory_used_percent:
+          title: Memory Used Percent
+          type: number
+        swap_free:
+          title: Swap Free
+          type: string
+        swap_total:
+          title: Swap Total
+          type: string
+        swap_used:
+          title: Swap Used
+          type: string
+        swap_used_percent:
+          title: Swap Used Percent
+          type: number
+      required:
+      - cpu_count
+      - load_average_1m
+      - load_average_5m
+      - load_average_15m
+      - memory_total
+      - memory_used
+      - memory_free
+      - memory_available
+      - memory_used_percent
+      - swap_total
+      - swap_used
+      - swap_free
+      - swap_used_percent
+      title: CpuMemoryOverview
+      type: object
+    DiskUsage:
+      properties:
+        filesystems:
+          items:
+            $ref: '#/components/schemas/FilesystemUsage'
+          title: Filesystems
+          type: array
+        user_home:
+          items:
+            $ref: '#/components/schemas/UserHomeUsage'
+          title: User Home
+          type: array
+      required:
+      - filesystems
+      - user_home
+      title: DiskUsage
+      type: object
+    FilesystemUsage:
+      properties:
+        available:
+          title: Available
+          type: string
+        fstype:
+          title: Fstype
+          type: string
+        mount_point:
+          title: Mount Point
+          type: string
+        size:
+          title: Size
+          type: string
+        source:
+          title: Source
+          type: string
+        used:
+          title: Used
+          type: string
+        used_percent:
+          title: Used Percent
+          type: number
+      required:
+      - source
+      - fstype
+      - size
+      - used
+      - available
+      - used_percent
+      - mount_point
+      title: FilesystemUsage
+      type: object
+    GpuInfo:
+      properties:
+        index:
+          title: Index
+          type: integer
+        memory_total:
+          title: Memory Total
+          type: string
+        memory_used:
+          title: Memory Used
+          type: string
+        memory_used_percent:
+          title: Memory Used Percent
+          type: number
+        name:
+          title: Name
+          type: string
+        temperature_celsius:
+          title: Temperature Celsius
+          type: integer
+        utilization_percent:
+          title: Utilization Percent
+          type: integer
+      required:
+      - index
+      - name
+      - utilization_percent
+      - memory_used
+      - memory_total
+      - memory_used_percent
+      - temperature_celsius
+      title: GpuInfo
+      type: object
+    GpuProcess:
+      properties:
+        gpu_index:
+          title: Gpu Index
+          type: integer
+        gpu_name:
+          title: Gpu Name
+          type: string
+        pid:
+          title: Pid
+          type: integer
+        used_memory:
+          title: Used Memory
+          type: string
+        user:
+          title: User
+          type: string
+      required:
+      - gpu_index
+      - gpu_name
+      - pid
+      - user
+      - used_memory
+      title: GpuProcess
+      type: object
+    GpuStatus:
+      properties:
+        gpu_processes:
+          items:
+            $ref: '#/components/schemas/GpuProcess'
+          title: Gpu Processes
+          type: array
+        gpus:
+          items:
+            $ref: '#/components/schemas/GpuInfo'
+          title: Gpus
+          type: array
+      required:
+      - gpus
+      - gpu_processes
+      title: GpuStatus
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    HealthResponse:
+      properties:
+        polling_interval_seconds:
+          title: Polling Interval Seconds
+          type: integer
+        server_count:
+          title: Server Count
+          type: integer
+        status:
+          title: Status
+          type: string
+        uptime_seconds:
+          title: Uptime Seconds
+          type: number
+      required:
+      - status
+      - uptime_seconds
+      - polling_interval_seconds
+      - server_count
+      title: HealthResponse
+      type: object
+    ProcessSummary:
+      properties:
+        per_user:
+          items:
+            $ref: '#/components/schemas/UserProcessSummary'
+          title: Per User
+          type: array
+        top_processes:
+          items:
+            $ref: '#/components/schemas/TopProcess'
+          title: Top Processes
+          type: array
+      required:
+      - per_user
+      - top_processes
+      title: ProcessSummary
+      type: object
+    ServerListResponse:
+      properties:
+        servers:
+          items:
+            $ref: '#/components/schemas/ServerSummary'
+          title: Servers
+          type: array
+      required:
+      - servers
+      title: ServerListResponse
+      type: object
+    ServerStatus:
+      properties:
+        cpu_memory_overview:
+          anyOf:
+          - $ref: '#/components/schemas/CpuMemoryOverview'
+          - type: 'null'
+        disk_usage:
+          anyOf:
+          - $ref: '#/components/schemas/DiskUsage'
+          - type: 'null'
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        gpu_status:
+          anyOf:
+          - $ref: '#/components/schemas/GpuStatus'
+          - type: 'null'
+        host:
+          title: Host
+          type: string
+        is_online:
+          title: Is Online
+          type: boolean
+        last_updated_at:
+          format: date-time
+          title: Last Updated At
+          type: string
+        process_summary:
+          anyOf:
+          - $ref: '#/components/schemas/ProcessSummary'
+          - type: 'null'
+        server_name:
+          title: Server Name
+          type: string
+        tmux_sessions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/TmuxUserSummary'
+            type: array
+          - type: 'null'
+          title: Tmux Sessions
+      required:
+      - server_name
+      - host
+      - is_online
+      - last_updated_at
+      title: ServerStatus
+      type: object
+    ServerSummary:
+      properties:
+        active_users:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Active Users
+        cpu_used_percent:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cpu Used Percent
+        disk_max_used_percent:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Disk Max Used Percent
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        gpu_max_utilization_percent:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Gpu Max Utilization Percent
+        host:
+          title: Host
+          type: string
+        is_online:
+          title: Is Online
+          type: boolean
+        last_updated_at:
+          format: date-time
+          title: Last Updated At
+          type: string
+        memory_used_percent:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Memory Used Percent
+        name:
+          title: Name
+          type: string
+      required:
+      - name
+      - host
+      - is_online
+      - last_updated_at
+      title: ServerSummary
+      type: object
+    TmuxUserSummary:
+      properties:
+        session_count:
+          title: Session Count
+          type: integer
+        user:
+          title: User
+          type: string
+        window_count:
+          title: Window Count
+          type: integer
+      required:
+      - user
+      - session_count
+      - window_count
+      title: TmuxUserSummary
+      type: object
+    TopProcess:
+      properties:
+        command:
+          title: Command
+          type: string
+        cpu_percent:
+          title: Cpu Percent
+          type: number
+        memory_percent:
+          title: Memory Percent
+          type: number
+        pid:
+          title: Pid
+          type: integer
+        user:
+          title: User
+          type: string
+      required:
+      - user
+      - pid
+      - cpu_percent
+      - memory_percent
+      - command
+      title: TopProcess
+      type: object
+    UserHomeUsage:
+      properties:
+        size:
+          title: Size
+          type: string
+        user:
+          title: User
+          type: string
+      required:
+      - user
+      - size
+      title: UserHomeUsage
+      type: object
+    UserProcessSummary:
+      properties:
+        cpu_percent:
+          title: Cpu Percent
+          type: number
+        memory_percent:
+          title: Memory Percent
+          type: number
+        user:
+          title: User
+          type: string
+      required:
+      - user
+      - cpu_percent
+      - memory_percent
+      title: UserProcessSummary
+      type: object
+    ValidationError:
+      properties:
+        ctx:
+          title: Context
+          type: object
+        input:
+          title: Input
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+info:
+  title: Internal Server Observation
+  version: 0.1.0
+openapi: 3.1.0
+paths:
+  /api/health:
+    get:
+      operationId: health_check_api_health_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+          description: Successful Response
+      summary: Health check
+      tags:
+      - health
+  /api/servers:
+    get:
+      operationId: list_servers_api_servers_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerListResponse'
+          description: Successful Response
+      summary: List all servers
+      tags:
+      - servers
+  /api/servers/{server_name}/status:
+    get:
+      operationId: get_server_status_api_servers__server_name__status_get
+      parameters:
+      - in: path
+        name: server_name
+        required: true
+        schema:
+          title: Server Name
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerStatus'
+          description: Successful Response
+        '404':
+          description: Server not found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get server status
+      tags:
+      - servers
