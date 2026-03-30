@@ -1,87 +1,110 @@
-# Welcome to React Router!
+# フロントエンド
 
-A modern, production-ready template for building full-stack React applications using React Router.
+社内サーバー利用状況ダッシュボードのフロントエンド。React + TypeScript によるシングルページアプリケーション。
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 技術スタック
 
-## Features
+| 技術 | 用途 |
+|------|------|
+| React 19 | UI ライブラリ |
+| TypeScript 5.9 | 型安全な開発 |
+| React Router 7 | ルーティング |
+| Vite | ビルドツール・開発サーバー |
+| Tailwind CSS 4 | スタイリング |
+| TanStack Query | データフェッチ・10秒ポーリング |
+| Orval | OpenAPI → API クライアント自動生成 |
+| Playwright | E2E テスト |
+| pnpm | パッケージマネージャ |
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
+## セットアップ
 
 ```bash
-npm install
+nvm use          # Node.js 22 に切り替え
+pnpm install     # 依存関係インストール
 ```
 
-### Development
-
-Start the development server with HMR:
+## 開発サーバー起動
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+http://localhost:5173 でアクセス。バックエンド（:8000）が起動している必要があります。
 
-## Building for Production
-
-Create a production build:
+## ビルド
 
 ```bash
-npm run build
+pnpm build
 ```
 
-## Deployment
+## テスト
 
-### Docker Deployment
-
-To build and run using Docker:
+### E2E テスト（Playwright）
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+pnpm test:e2e              # ヘッドレス実行
+pnpm test:e2e:headed       # ブラウザ表示あり
+pnpm test:e2e:ui           # Playwright UI モード
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+### 型チェック
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+```bash
+pnpm typecheck
+```
 
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+## ディレクトリ構成
 
 ```
+frontend/
+├── Dockerfile
+├── nginx.conf               # Nginx 設定（本番用）
 ├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+├── pnpm-lock.yaml
+├── tsconfig.json
+├── vite.config.ts
+├── orval.config.cjs          # Orval（API クライアント生成）設定
+├── playwright.config.ts
+├── app/
+│   ├── root.tsx              # ルートコンポーネント
+│   ├── routes.ts             # ルート定義
+│   ├── app.css               # グローバルスタイル
+│   ├── routes/
+│   │   ├── home.tsx          # サーバー一覧（/）
+│   │   └── servers.$serverName.tsx  # サーバー詳細
+│   ├── components/
+│   │   ├── layout/           # レイアウト系（header, server-card）
+│   │   ├── status/           # ステータス表示（CPU, GPU, ディスク等）
+│   │   └── common/           # 共通（badge, progress-bar, alert）
+│   └── lib/
+│       ├── api/
+│       │   ├── custom-fetch.ts    # カスタムフェッチ（ベース URL 設定）
+│       │   └── generated/         # Orval 自動生成（編集禁止）
+│       └── hooks/
+│           ├── use-servers.ts     # サーバー一覧取得
+│           └── use-server-status.ts  # サーバー詳細取得
+└── e2e/                      # E2E テスト
+    ├── server-list.spec.ts
+    ├── server-detail.spec.ts
+    ├── stale-data.spec.ts
+    ├── responsive.spec.ts
+    └── helpers/
+        ├── app.ts
+        └── mock-data.ts
 ```
 
-## Styling
+## API クライアント再生成
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+OpenAPI スペックからの API クライアント再生成手順:
 
----
+1. バックエンドで OpenAPI スペックをエクスポート:
+   ```bash
+   cd ../backend && uv run python -m server.export_openapi
+   ```
 
-Built with ❤️ using React Router.
+2. API クライアントを再生成:
+   ```bash
+   pnpm generate_api_client
+   ```
+
+`app/lib/api/generated/` 配下のファイルが更新されます。このディレクトリは自動生成のため手動編集しないでください。
