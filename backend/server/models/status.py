@@ -36,6 +36,7 @@ class TopProcess(BaseModel):
 class ProcessSummary(BaseModel):
     per_user: list[UserProcessSummary]
     top_processes: list[TopProcess]
+    total_cpu_percent: float
 
 
 class FilesystemUsage(BaseModel):
