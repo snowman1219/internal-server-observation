@@ -83,6 +83,7 @@ export const MOCK_GPU_SERVER_STATUS = {
         command: "python evaluate.py",
       },
     ],
+    total_cpu_percent: 451.2,
   },
   disk_usage: {
     filesystems: [
@@ -162,6 +163,7 @@ export const MOCK_NO_GPU_SERVER_STATUS = {
         command: "node server.js",
       },
     ],
+    total_cpu_percent: 41.6,
   },
   disk_usage: {
     filesystems: [

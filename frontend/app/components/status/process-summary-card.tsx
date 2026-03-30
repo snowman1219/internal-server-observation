@@ -12,21 +12,21 @@ function getBarColor(percent: number): string {
 
 export function ProcessSummaryCard({ data }: ProcessSummaryCardProps) {
   return (
-    <div data-testid="process-summary-card" className="rounded-lg border border-gray-200 bg-white p-4">
-      <h3 className="font-semibold text-lg mb-4">プロセス / リソース</h3>
+    <div data-testid="process-summary-card" className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+      <h3 className="font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">プロセス / リソース</h3>
       {data == null ? (
-        <p className="text-gray-400 text-sm">データなし</p>
+        <p className="text-gray-400 dark:text-gray-500 text-sm">データなし</p>
       ) : (
         <div className="space-y-4">
           {/* Per-user summary bars */}
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               ユーザー別リソース使用
             </h4>
             <div className="space-y-2">
               {data.per_user.map((user) => (
                 <div key={user.user} className="text-sm">
-                  <div className="flex justify-between text-gray-600 mb-0.5">
+                  <div className="flex justify-between text-gray-600 dark:text-gray-300 mb-0.5">
                     <span className="font-medium">{user.user}</span>
                     <span>
                       CPU {user.cpu_percent.toFixed(1)}% / MEM{" "}
@@ -34,7 +34,7 @@ export function ProcessSummaryCard({ data }: ProcessSummaryCardProps) {
                     </span>
                   </div>
                   <div className="flex gap-1">
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div
                         className={`h-2 rounded-full ${getBarColor(user.cpu_percent)}`}
                         style={{
@@ -42,7 +42,7 @@ export function ProcessSummaryCard({ data }: ProcessSummaryCardProps) {
                         }}
                       />
                     </div>
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div
                         className={`h-2 rounded-full ${getBarColor(user.memory_percent)}`}
                         style={{
@@ -58,13 +58,13 @@ export function ProcessSummaryCard({ data }: ProcessSummaryCardProps) {
 
           {/* Top 5 processes table */}
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               上位プロセス
             </h4>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-gray-200 text-gray-500">
+                  <tr className="border-b border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400">
                     <th className="text-left py-1 pr-2">ユーザー</th>
                     <th className="text-left py-1 pr-2">コマンド</th>
                     <th className="text-right py-1 pr-2">CPU%</th>
@@ -75,19 +75,19 @@ export function ProcessSummaryCard({ data }: ProcessSummaryCardProps) {
                   {data.top_processes.map((proc) => (
                     <tr
                       key={`${proc.pid}`}
-                      className="border-b border-gray-100"
+                      className="border-b border-gray-100 dark:border-gray-700"
                     >
-                      <td className="py-1 pr-2 text-gray-700">{proc.user}</td>
+                      <td className="py-1 pr-2 text-gray-700 dark:text-gray-200">{proc.user}</td>
                       <td
-                        className="py-1 pr-2 text-gray-600 max-w-[200px] truncate"
+                        className="py-1 pr-2 text-gray-600 dark:text-gray-300 max-w-[200px] truncate"
                         title={proc.command}
                       >
                         {proc.command}
                       </td>
-                      <td className="py-1 pr-2 text-right text-gray-700">
+                      <td className="py-1 pr-2 text-right text-gray-700 dark:text-gray-200">
                         {proc.cpu_percent.toFixed(1)}
                       </td>
-                      <td className="py-1 text-right text-gray-700">
+                      <td className="py-1 text-right text-gray-700 dark:text-gray-200">
                         {proc.memory_percent.toFixed(1)}
                       </td>
                     </tr>

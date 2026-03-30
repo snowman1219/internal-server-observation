@@ -2,8 +2,6 @@
 
 ## テンプレート
 
-`../cookiecutter-frontend` から生成。以下が事前構成済み:
-
 - React 19.2 + TypeScript 5.9 + Vite 6.3
 - React Router 7.9（SSR無効、CSR only）
 - Tailwind CSS 4.1
@@ -269,6 +267,108 @@ const queryClient = new QueryClient({
     },
   },
 });
+```
+
+---
+
+## テーマ切替（ダークモード / ライトモード）
+
+### 方式
+
+Tailwind CSS 4.1 の `class` ベースダークモードを使用する。
+
+```css
+/* app.css */
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+`<html>` 要素の `class` 属性を `light` / `dark` で切り替える。
+
+### テーマ切替ロジック
+
+```typescript
+// app/lib/theme.ts
+
+type Theme = "light" | "dark" | "system";
+
+/** localStorage からテーマ設定を取得（デフォルト: system） */
+function getStoredTheme(): Theme {
+  return (localStorage.getItem("theme") as Theme) ?? "system";
+}
+
+/** テーマを適用 */
+function applyTheme(theme: Theme): void {
+  const root = document.documentElement;
+  if (theme === "system") {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    root.classList.toggle("dark", prefersDark);
+    root.classList.toggle("light", !prefersDark);
+  } else {
+    root.classList.toggle("dark", theme === "dark");
+    root.classList.toggle("light", theme === "light");
+  }
+}
+
+/** テーマを保存して適用 */
+function setTheme(theme: Theme): void {
+  localStorage.setItem("theme", theme);
+  applyTheme(theme);
+}
+```
+
+### 初期化タイミング
+
+`root.tsx` で初回レンダリング前にテーマを適用する。FOUC（Flash of Unstyled Content）を防ぐため、`<head>` 内のインラインスクリプトで実行:
+
+```html
+<script>
+  (function() {
+    var theme = localStorage.getItem('theme') || 'system';
+    var dark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.classList.add(dark ? 'dark' : 'light');
+  })();
+</script>
+```
+
+### テーマ切替ボタン
+
+`header.tsx` に配置。3段階トグル: ライト → ダーク → システム。
+
+| テーマ | アイコン | 表示 |
+|--------|---------|------|
+| `light` | ☀️ | ライトモード |
+| `dark` | 🌙 | ダークモード |
+| `system` | 🖥️ | システム設定に従う |
+
+### ダークモードカラー規約
+
+全コンポーネントで以下のパターンを適用:
+
+| 要素 | ライト | ダーク |
+|------|--------|--------|
+| ページ背景 | `bg-gray-100` | `dark:bg-gray-900` |
+| カード背景 | `bg-white` | `dark:bg-gray-800` |
+| カードボーダー | `border-gray-200` | `dark:border-gray-700` |
+| 見出しテキスト | `text-gray-900` | `dark:text-gray-100` |
+| 本文テキスト | `text-gray-600` | `dark:text-gray-300` |
+| 補足テキスト | `text-gray-400` / `text-gray-500` | `dark:text-gray-400` |
+| プログレスバー背景 | `bg-gray-200` | `dark:bg-gray-700` |
+| テーブルボーダー | `border-gray-100` / `border-gray-200` | `dark:border-gray-700` |
+| オフラインカード | `bg-gray-50 opacity-70` | `dark:bg-gray-800/50` |
+| stale-badge | `bg-yellow-100 text-yellow-800` | `dark:bg-yellow-900 dark:text-yellow-200` |
+| エラーテキスト | `text-red-500` | `dark:text-red-400` |
+| リンク | `text-blue-600` | `dark:text-blue-400` |
+
+### コンポーネント構成への影響
+
+```
+app/
+    lib/
+        theme.ts                    # テーマ管理ロジック（新規）
+    components/
+        layout/
+            header.tsx              # テーマ切替ボタンを追加
+            theme-toggle.tsx        # テーマ切替ボタンコンポーネント（新規）
 ```
 
 ---

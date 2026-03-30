@@ -20,7 +20,7 @@ export function StaleBadge({ lastUpdatedAt }: StaleBadgeProps) {
   const minutesAgo = getMinutesAgo(lastUpdatedAt);
 
   return (
-    <span data-testid="stale-badge" className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
+    <span data-testid="stale-badge" className="inline-flex items-center gap-1 rounded-full bg-yellow-100 dark:bg-yellow-900 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:text-yellow-200">
       <span>&#9888;</span>
       データが古い可能性があります（{minutesAgo}分前に更新）
     </span>

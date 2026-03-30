@@ -1,3 +1,5 @@
+import { ThemeToggle } from "./theme-toggle";
+
 interface HeaderProps {
   lastUpdatedAt?: string;
 }
@@ -13,13 +15,16 @@ function formatTimeAgo(isoDate: string): string {
 
 export function Header({ lastUpdatedAt }: HeaderProps) {
   return (
-    <header className="bg-gray-800 text-white px-6 py-4 flex items-center justify-between">
+    <header className="bg-gray-800 dark:bg-gray-950 text-white px-6 py-4 flex items-center justify-between">
       <h1 className="text-xl font-bold">Server Monitor</h1>
-      {lastUpdatedAt && (
-        <span className="text-sm text-gray-300">
-          最終更新: {formatTimeAgo(lastUpdatedAt)}
-        </span>
-      )}
+      <div className="flex items-center gap-4">
+        {lastUpdatedAt && (
+          <span className="text-sm text-gray-300">
+            最終更新: {formatTimeAgo(lastUpdatedAt)}
+          </span>
+        )}
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

@@ -15,7 +15,7 @@ export default function ServerDetail() {
   const { data, isLoading, error } = useServerStatus(serverName ?? "");
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <Header lastUpdatedAt={data?.last_updated_at} />
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Sub-header */}
@@ -24,11 +24,11 @@ export default function ServerDetail() {
             type="button"
             data-testid="back-button"
             onClick={() => navigate("/")}
-            className="text-sm text-blue-600 hover:text-blue-800"
+            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
           >
             &larr; 戻る
           </button>
-          <h2 className="text-xl font-bold">{serverName}</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{serverName}</h2>
           {data && (
             <>
               <span
@@ -49,7 +49,7 @@ export default function ServerDetail() {
         </div>
 
         {isLoading && (
-          <p className="text-gray-500 text-center py-12">読み込み中...</p>
+          <p className="text-gray-500 dark:text-gray-400 text-center py-12">読み込み中...</p>
         )}
 
         {error && <ErrorAlert message={String(error.message)} />}
@@ -60,7 +60,16 @@ export default function ServerDetail() {
           <div className="space-y-4">
             {/* 2-column grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <CpuMemoryCard data={data.cpu_memory_overview ?? null} />
+              <CpuMemoryCard
+                data={data.cpu_memory_overview ?? null}
+                cpuUsedPercent={
+                  data.process_summary && data.cpu_memory_overview
+                    ? Math.round(
+                        (data.process_summary.total_cpu_percent / data.cpu_memory_overview.cpu_count) * 10
+                      ) / 10
+                    : null
+                }
+              />
               <ProcessSummaryCard data={data.process_summary ?? null} />
               <DiskUsageCard data={data.disk_usage ?? null} />
               <TmuxCard data={data.tmux_sessions ?? null} />
