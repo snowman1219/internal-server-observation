@@ -3,59 +3,6 @@ import asyncio
 from server.models.responses import ServerSummary
 from server.models.status import ServerStatus
 
-# System users to exclude from active_users
-_SYSTEM_USERS = frozenset(
-    {
-        "root",
-        "daemon",
-        "bin",
-        "sys",
-        "sync",
-        "games",
-        "man",
-        "lp",
-        "mail",
-        "news",
-        "uucp",
-        "proxy",
-        "www-data",
-        "backup",
-        "list",
-        "irc",
-        "gnats",
-        "nobody",
-        "systemd-network",
-        "systemd-resolve",
-        "systemd-timesync",
-        "messagebus",
-        "syslog",
-        "avahi",
-        "colord",
-        "hplip",
-        "kernoops",
-        "nm-openvpn",
-        "rtkit",
-        "saned",
-        "usbmux",
-        "whoopsie",
-        "dnsmasq",
-        "cups-pk-helper",
-        "pulse",
-        "geoclue",
-        "gdm",
-        "sssd",
-        "chrony",
-        "sshd",
-        "ntp",
-        "postfix",
-        "polkitd",
-        "tcpdump",
-        "_apt",
-        "statd",
-        "crontab",
-    }
-)
-
 
 class StatusStore:
     def __init__(self) -> None:
@@ -118,16 +65,17 @@ def _build_summary(status: ServerStatus) -> ServerSummary:
 
 
 def _collect_active_users(status: ServerStatus) -> list[str]:
-    """Collect active (non-system) users from processes and tmux sessions."""
+    """Collect active (non-system) users from processes and tmux sessions.
+
+    per_user is already filtered to regular users by the parser (UID-based).
+    """
     user_set: set[str] = set()
     if status.process_summary:
         for pu in status.process_summary.per_user:
-            if pu.user not in _SYSTEM_USERS:
-                user_set.add(pu.user)
+            user_set.add(pu.user)
     if status.tmux_sessions:
         for ts in status.tmux_sessions:
-            if ts.user not in _SYSTEM_USERS:
-                user_set.add(ts.user)
+            user_set.add(ts.user)
     return sorted(user_set)
 
 
@@ -135,7 +83,7 @@ def _calc_cpu_used_percent(status: ServerStatus) -> float | None:
     """Calculate CPU used percent: total CPU% / cpu_count."""
     if not status.cpu_memory_overview or not status.process_summary:
         return None
-    total_cpu = sum(pu.cpu_percent for pu in status.process_summary.per_user)
+    total_cpu = status.process_summary.total_cpu_percent
     cpu_count = status.cpu_memory_overview.cpu_count
     if cpu_count <= 0:
         return 0.0
