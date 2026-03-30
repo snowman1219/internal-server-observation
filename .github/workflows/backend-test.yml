@@ -1,0 +1,19 @@
+name: Backend Test
+
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**']
+  pull_request:
+    paths: ['backend/**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+      - run: uv run pytest -v
