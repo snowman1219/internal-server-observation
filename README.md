@@ -4,7 +4,13 @@
 
 ## スクリーンショット
 
-> TODO: スクリーンショットを追加
+### サーバー一覧
+
+![サーバー一覧](docs/images/server-list.png)
+
+### サーバー詳細
+
+![サーバー詳細](docs/images/server-detail.png)
 
 ## アーキテクチャ
 
