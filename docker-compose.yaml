@@ -12,7 +12,7 @@ services:
       - CONFIG_PATH=/app/config.yaml
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-30}
       - SSH_TIMEOUT_SECONDS=${SSH_TIMEOUT_SECONDS:-5}
-      - SSH_KEY_PATH=/root/.ssh/id_rsa
+      - SSH_KEY_PATH=/root/.ssh/server_monitor_key
     restart: unless-stopped
 
   frontend:
