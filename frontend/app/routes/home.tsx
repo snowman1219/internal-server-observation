@@ -20,11 +20,11 @@ export default function Home() {
     .reverse()[0];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <Header lastUpdatedAt={latestUpdate} />
       <main className="max-w-7xl mx-auto px-4 py-6">
         {isLoading && (
-          <p className="text-gray-500 text-center py-12">読み込み中...</p>
+          <p className="text-gray-500 dark:text-gray-400 text-center py-12">読み込み中...</p>
         )}
 
         {error && <ErrorAlert message={String(error.message)} />}

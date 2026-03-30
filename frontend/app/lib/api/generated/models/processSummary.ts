@@ -10,4 +10,5 @@ import type { UserProcessSummary } from './userProcessSummary';
 export interface ProcessSummary {
   per_user: UserProcessSummary[];
   top_processes: TopProcess[];
+  total_cpu_percent: number;
 }

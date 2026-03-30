@@ -17,12 +17,12 @@ export function ProgressBar({ percent, label, size = "md" }: ProgressBarProps) {
   return (
     <div className="w-full" data-testid="progress-bar">
       {label && (
-        <div className="flex justify-between text-sm text-gray-600 mb-1">
+        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-1">
           <span>{label}</span>
           <span>{clampedPercent.toFixed(1)}%</span>
         </div>
       )}
-      <div className={`w-full bg-gray-200 rounded-full ${heightClass}`}>
+      <div className={`w-full bg-gray-200 dark:bg-gray-700 rounded-full ${heightClass}`}>
         <div
           className={`${heightClass} rounded-full ${getColorClass(clampedPercent)}`}
           style={{ width: `${clampedPercent}%` }}

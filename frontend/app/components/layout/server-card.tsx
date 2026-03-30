@@ -29,8 +29,8 @@ export function ServerCard({ server }: ServerCardProps) {
       data-testid={`server-card-${server.name}`}
       className={`rounded-lg border p-4 cursor-pointer transition-shadow hover:shadow-md ${
         isOnline
-          ? "bg-white border-gray-200"
-          : "bg-gray-50 border-gray-300 opacity-70"
+          ? "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+          : "bg-gray-50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 opacity-70"
       }`}
       onClick={handleClick}
       onKeyDown={(e) => {
@@ -40,7 +40,7 @@ export function ServerCard({ server }: ServerCardProps) {
       tabIndex={0}
     >
       <div className="flex items-center justify-between mb-2">
-        <h3 className="font-semibold text-lg">{server.name}</h3>
+        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">{server.name}</h3>
         <span
           className={`inline-flex items-center gap-1 text-sm ${
             isOnline ? "text-green-600" : "text-gray-400"
@@ -55,10 +55,10 @@ export function ServerCard({ server }: ServerCardProps) {
         </span>
       </div>
 
-      <p className="text-sm text-gray-500 mb-2">{server.host}</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{server.host}</p>
 
       {server.active_users && server.active_users.length > 0 && (
-        <p className="text-xs text-gray-500 mb-2">
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
           ユーザー: {server.active_users.join(", ")}
         </p>
       )}
@@ -97,10 +97,10 @@ export function ServerCard({ server }: ServerCardProps) {
       )}
 
       {server.error && (
-        <p className="text-xs text-red-500 mt-2">{server.error}</p>
+        <p className="text-xs text-red-500 dark:text-red-400 mt-2">{server.error}</p>
       )}
 
-      <p className="text-xs text-gray-400 mt-2">
+      <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
         更新: {formatTimeAgo(server.last_updated_at)}
       </p>
     </div>
